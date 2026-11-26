@@ -242,12 +242,14 @@ export function Achievements() {
 
         .ach-card {
           position: relative;
+          flex-shrink: 0;
           width: min(332px, calc(100vw - 36px));
           min-height: 280px;
           height: auto;
           padding: 22px;
           border-radius: 26px;
           background: var(--card);
+          overflow: hidden;
           box-shadow:
             inset 0 0 0 1px var(--line),
             0 12px 28px -20px rgba(13, 13, 13, 0.08);
@@ -322,6 +324,7 @@ export function Achievements() {
         .ach-copy {
           min-width: 0;
           max-width: 100%;
+          overflow-wrap: break-word;
         }
         .ach-label {
           margin: 0;
