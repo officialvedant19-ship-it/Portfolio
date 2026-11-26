@@ -13,6 +13,9 @@ export function Navigation() {
 
   const navListRef = useRef<HTMLDivElement | null>(null);
   const linkRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+  const toggleBtnRef = useRef<HTMLButtonElement | null>(null);
+  const wasOpenRef = useRef(false);
+
   const [pillStyle, setPillStyle] = useState<{ left: number; width: number; opacity: number }>({
     left: 0,
     width: 0,
@@ -72,31 +75,86 @@ export function Navigation() {
     return () => window.removeEventListener("resize", measure);
   }, [activeId, scrolled]);
 
-  // Lock page scroll & listen for Escape when mobile menu is open
+  // Automatically close mobile menu if viewport switches to desktop (>= 820px)
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 820px)");
+    const onChange = (e: MediaQueryListEvent) => {
+      if (e.matches) {
+        setScrollLocked(false);
+        setMenuOpen(false);
+      }
+    };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  // Lock page scroll, handle Escape key, and restore focus cleanly
   useEffect(() => {
     setScrollLocked(menuOpen);
-    if (!menuOpen) return;
 
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMenuOpen(false);
-    };
-    window.addEventListener("keydown", onKeyDown);
+    if (menuOpen) {
+      wasOpenRef.current = true;
+      const onKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          setScrollLocked(false);
+          setMenuOpen(false);
+          toggleBtnRef.current?.focus();
+        }
+      };
+      window.addEventListener("keydown", onKeyDown);
+      return () => {
+        window.removeEventListener("keydown", onKeyDown);
+        setScrollLocked(false);
+      };
+    }
+
+    if (wasOpenRef.current) {
+      wasOpenRef.current = false;
+    }
+  }, [menuOpen]);
+
+  // Guarantee scroll is unlocked on unmount
+  useEffect(() => {
     return () => {
-      window.removeEventListener("keydown", onKeyDown);
       setScrollLocked(false);
     };
-  }, [menuOpen]);
+  }, []);
+
+  const navigateAfterClosing = (target: string | number, offset = 0) => {
+    if (menuOpen) {
+      // Unlock synchronously first, then close menu and scroll on the next frame
+      // so Lenis and native scroll containers are fully active.
+      setScrollLocked(false);
+      setMenuOpen(false);
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          scrollToTarget(target, offset);
+        });
+      });
+    } else {
+      scrollToTarget(target, offset);
+    }
+  };
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
-    setMenuOpen(false);
-    scrollToTarget(`#${targetId}`, -16);
+    navigateAfterClosing(`#${targetId}`, -16);
   };
 
   const handleBrandClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    setMenuOpen(false);
-    scrollToTarget(0);
+    navigateAfterClosing(0, 0);
+  };
+
+  const handleToggleMenu = () => {
+    setMenuOpen((prev) => {
+      const next = !prev;
+      if (!next) {
+        setScrollLocked(false);
+      }
+      return next;
+    });
   };
 
   return (
@@ -108,7 +166,7 @@ export function Navigation() {
           left: 0;
           right: 0;
           height: 2px;
-          z-index: 120;
+          z-index: 1050;
           pointer-events: none;
           background: transparent;
         }
@@ -124,15 +182,18 @@ export function Navigation() {
           top: 0;
           left: 0;
           right: 0;
-          z-index: 90;
-          padding-block: 16px;
+          z-index: 1000;
+          padding-top: calc(14px + env(safe-area-inset-top, 0px));
+          padding-bottom: 14px;
           pointer-events: none;
         }
         .site-header-inner {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 16px;
+          gap: 12px;
+          padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+          padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
         }
         .brand-btn {
           pointer-events: auto;
@@ -141,6 +202,9 @@ export function Navigation() {
           gap: 12px;
           padding: 4px;
           border-radius: 999px;
+          touch-action: manipulation;
+          -webkit-tap-highlight-color: transparent;
+          min-width: 0;
         }
         .brand-mark {
           width: 38px;
@@ -149,6 +213,7 @@ export function Navigation() {
           display: inline-flex;
           align-items: center;
           justify-content: center;
+          flex-shrink: 0;
           font-family: var(--font-mono);
           font-size: 12px;
           font-weight: 600;
@@ -243,93 +308,179 @@ export function Navigation() {
           pointer-events: auto;
           display: inline-flex;
           align-items: center;
+          justify-content: center;
           gap: 8px;
-          height: 38px;
-          padding-inline: 16px;
+          min-height: 42px;
+          min-width: 82px;
+          padding-inline: 18px;
           border-radius: 999px;
-          font-size: 13px;
+          font-size: 13.5px;
           font-weight: 500;
-          background: rgba(255, 255, 255, 0.85);
+          background: rgba(255, 255, 255, 0.9);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
-          box-shadow: inset 0 0 0 1px var(--line);
+          box-shadow:
+            inset 0 0 0 1px var(--line),
+            0 6px 18px -10px rgba(13, 13, 13, 0.14);
           color: var(--ink);
-          transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
+          touch-action: manipulation;
+          -webkit-tap-highlight-color: transparent;
+          flex-shrink: 0;
+          transition:
+            background-color 0.3s var(--ease),
+            color 0.3s var(--ease),
+            box-shadow 0.3s var(--ease);
         }
         .nav-mobile-toggle[aria-expanded="true"] {
           background: var(--maroon);
           color: var(--paper);
-          box-shadow: none;
+          box-shadow: 0 8px 20px -10px rgba(110, 29, 42, 0.45);
         }
         .mobile-overlay {
           position: fixed;
           inset: 0;
-          z-index: 80;
+          width: 100%;
+          height: 100vh;
+          height: 100dvh;
+          max-height: 100dvh;
+          z-index: 950;
           background: var(--paper);
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          padding: 104px var(--gutter) 40px;
+          gap: 28px;
+          overflow-y: auto;
+          overscroll-behavior: contain;
+          touch-action: pan-y;
+          -webkit-overflow-scrolling: touch;
+          padding-top: calc(88px + env(safe-area-inset-top, 0px));
+          padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+          padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+          padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
           clip-path: inset(0 0 100% 0);
           opacity: 0;
+          visibility: hidden;
           pointer-events: none;
           transition:
-            clip-path 0.65s var(--ease),
-            opacity 0.4s var(--ease);
+            clip-path 0.58s var(--ease),
+            opacity 0.38s var(--ease),
+            visibility 0s linear 0.58s;
         }
         .mobile-overlay.is-open {
           clip-path: inset(0 0 0% 0);
           opacity: 1;
+          visibility: visible;
           pointer-events: auto;
+          transition:
+            clip-path 0.58s var(--ease),
+            opacity 0.38s var(--ease),
+            visibility 0s linear 0s;
         }
         .mobile-links {
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 4px;
         }
         .mobile-link {
           display: flex;
-          align-items: baseline;
-          gap: 18px;
+          align-items: center;
+          justify-content: space-between;
+          gap: 14px;
+          min-height: 54px;
           padding-block: 10px;
           border-bottom: 1px solid var(--line);
           opacity: 0;
-          transform: translateY(22px);
+          transform: translateY(18px);
+          touch-action: manipulation;
+          -webkit-tap-highlight-color: transparent;
           transition:
-            opacity 0.55s var(--ease),
-            transform 0.55s var(--ease);
+            opacity 0.48s var(--ease),
+            transform 0.48s var(--ease),
+            color 0.25s var(--ease);
         }
         .mobile-overlay.is-open .mobile-link {
           opacity: 1;
           transform: translateY(0);
-          transition-delay: calc(var(--mi, 0) * 55ms + 120ms);
+          transition-delay: calc(var(--mi, 0) * 45ms + 90ms);
+        }
+        .mobile-link-left {
+          display: inline-flex;
+          align-items: baseline;
+          gap: 16px;
+          min-width: 0;
         }
         .mobile-link-num {
           font-family: var(--font-mono);
           font-size: 12px;
+          font-weight: 600;
           color: var(--maroon);
+          flex-shrink: 0;
         }
         .mobile-link-label {
-          font-size: clamp(2rem, 9vw, 3rem);
+          font-size: clamp(1.7rem, 7.2vw, 2.75rem);
           font-weight: 700;
           letter-spacing: -0.04em;
-          line-height: 1.05;
+          line-height: 1.08;
           color: var(--ink);
+          transition: color 0.25s var(--ease);
+        }
+        .mobile-link.is-active .mobile-link-label,
+        .mobile-link:active .mobile-link-label {
+          color: var(--maroon);
+        }
+        .mobile-active-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 999px;
+          background: var(--maroon);
+          flex-shrink: 0;
         }
         .mobile-meta {
           display: flex;
           flex-wrap: wrap;
-          gap: 16px;
+          align-items: center;
+          gap: 8px 18px;
+          padding-top: 8px;
           font-family: var(--font-mono);
           font-size: 12px;
-          color: var(--mute);
+          color: var(--mute-text);
+        }
+        .mobile-meta a {
+          display: inline-flex;
+          align-items: center;
+          min-height: 36px;
+          word-break: break-word;
+          touch-action: manipulation;
+        }
+        .mobile-meta a:hover,
+        .mobile-meta a:focus-visible {
+          color: var(--maroon);
         }
         @media (min-width: 820px) {
+          .site-header {
+            padding-block: 16px;
+          }
           .nav-pill-wrap {
             display: inline-flex;
           }
           .nav-mobile-toggle {
             display: none;
+          }
+          .mobile-overlay {
+            display: none;
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .mobile-overlay,
+          .mobile-overlay.is-open,
+          .mobile-link,
+          .mobile-overlay.is-open .mobile-link {
+            transition: none !important;
+            transition-delay: 0ms !important;
+            transform: none !important;
+          }
+          .mobile-overlay {
+            clip-path: none;
           }
         }
       `}</style>
@@ -348,10 +499,10 @@ export function Navigation() {
             onClick={handleBrandClick}
             className="brand-btn"
           >
-            <span className={`brand-mark ${scrolled ? "is-solid" : ""}`} aria-hidden="true">
+            <span className={`brand-mark ${scrolled && !menuOpen ? "is-solid" : ""}`} aria-hidden="true">
               {PROFILE.initials}
             </span>
-            <span className={`brand-name ${scrolled ? "is-hidden" : ""}`}>
+            <span className={`brand-name ${scrolled && !menuOpen ? "is-hidden" : ""}`}>
               {PROFILE.name}
             </span>
           </a>
@@ -390,12 +541,13 @@ export function Navigation() {
             </div>
 
             <button
+              ref={toggleBtnRef}
               type="button"
               className="nav-mobile-toggle"
               aria-expanded={menuOpen}
               aria-controls="mobile-nav-overlay"
               aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
-              onClick={() => setMenuOpen((prev) => !prev)}
+              onClick={handleToggleMenu}
             >
               <span>{menuOpen ? "Close" : "Menu"}</span>
             </button>
@@ -405,23 +557,34 @@ export function Navigation() {
 
       <div
         id="mobile-nav-overlay"
+        role="dialog"
+        aria-modal={menuOpen ? "true" : undefined}
+        aria-label="Mobile navigation menu"
         className={`mobile-overlay ${menuOpen ? "is-open" : ""}`}
         aria-hidden={!menuOpen}
+        data-lenis-prevent
       >
         <nav aria-label="Mobile navigation" className="mobile-links">
-          {NAV.map((item, idx) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              tabIndex={menuOpen ? 0 : -1}
-              onClick={(e) => handleNavClick(e, item.id)}
-              className="mobile-link"
-              style={{ ["--mi" as string]: idx }}
-            >
-              <span className="mobile-link-num">{item.index}</span>
-              <span className="mobile-link-label">{item.label}</span>
-            </a>
-          ))}
+          {NAV.map((item, idx) => {
+            const isActive = activeId === item.id;
+            return (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                tabIndex={menuOpen ? 0 : -1}
+                onClick={(e) => handleNavClick(e, item.id)}
+                className={`mobile-link ${isActive ? "is-active" : ""}`}
+                aria-current={isActive ? "location" : undefined}
+                style={{ ["--mi" as string]: idx }}
+              >
+                <span className="mobile-link-left">
+                  <span className="mobile-link-num">{item.index}</span>
+                  <span className="mobile-link-label">{item.label}</span>
+                </span>
+                {isActive && <span className="mobile-active-dot" aria-hidden="true" />}
+              </a>
+            );
+          })}
         </nav>
 
         <div className="mobile-meta">
@@ -439,4 +602,3 @@ export function Navigation() {
     </>
   );
 }
-
