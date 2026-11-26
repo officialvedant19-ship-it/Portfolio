@@ -242,10 +242,11 @@ export function Achievements() {
 
         .ach-card {
           position: relative;
-          width: clamp(310px, 40vw, 540px);
-          height: clamp(260px, 36vh, 310px);
-          padding: clamp(22px, 2.5vw, 30px);
-          border-radius: 28px;
+          width: min(332px, calc(100vw - 36px));
+          min-height: 280px;
+          height: auto;
+          padding: 22px;
+          border-radius: 26px;
           background: var(--card);
           box-shadow:
             inset 0 0 0 1px var(--line),
@@ -253,6 +254,7 @@ export function Achievements() {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          gap: 18px;
           transition:
             transform 0.55s var(--ease),
             box-shadow 0.55s var(--ease);
@@ -272,15 +274,16 @@ export function Achievements() {
         }
         .ach-logo-tile {
           position: relative;
-          width: 72px;
-          height: 72px;
-          border-radius: 20px;
+          width: 56px;
+          height: 56px;
+          border-radius: 16px;
           background: var(--paper);
           box-shadow: inset 0 0 0 1px var(--line);
           display: flex;
           align-items: center;
           justify-content: center;
           overflow: hidden;
+          flex-shrink: 0;
         }
         .ach-logo-glow {
           position: absolute;
@@ -311,26 +314,27 @@ export function Achievements() {
 
         .ach-card-bottom {
           display: flex;
-          align-items: flex-end;
+          flex-direction: column;
+          align-items: stretch;
           justify-content: space-between;
-          gap: 18px;
+          gap: 14px;
         }
         .ach-copy {
           min-width: 0;
-          max-width: 62%;
+          max-width: 100%;
         }
         .ach-label {
           margin: 0;
-          font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+          font-size: clamp(1.12rem, 1.8vw, 1.4rem);
           font-weight: 700;
           letter-spacing: -0.03em;
-          line-height: 1.15;
+          line-height: 1.18;
           color: var(--ink);
         }
         .ach-caption {
           margin: 4px 0 0;
           font-family: var(--font-mono);
-          font-size: 11px;
+          font-size: 10.5px;
           letter-spacing: 0.04em;
           text-transform: uppercase;
           color: var(--mute-text);
@@ -338,12 +342,13 @@ export function Achievements() {
         .ach-detail {
           margin: 8px 0 0;
           font-size: 13px;
-          line-height: 1.48;
+          line-height: 1.5;
           color: var(--ink-2);
         }
         .ach-metric {
+          align-self: flex-end;
           font-family: var(--font-sans);
-          font-size: clamp(2.4rem, 4.4vw, 3.8rem);
+          font-size: clamp(2.15rem, 4.4vw, 3.8rem);
           font-weight: 700;
           letter-spacing: -0.055em;
           line-height: 0.9;
@@ -352,8 +357,9 @@ export function Achievements() {
         }
 
         .ach-end-card {
-          width: clamp(240px, 28vw, 340px);
-          height: clamp(260px, 36vh, 310px);
+          width: clamp(230px, 28vw, 340px);
+          min-height: 280px;
+          height: auto;
           border-radius: 28px;
           border: 1.5px dashed rgba(13, 13, 13, 0.18);
           display: flex;
@@ -363,6 +369,34 @@ export function Achievements() {
           gap: 8px;
           padding: 24px;
           text-align: center;
+        }
+
+        @media (min-width: 640px) {
+          .ach-card {
+            width: clamp(380px, 40vw, 540px);
+            min-height: clamp(260px, 36vh, 310px);
+            padding: clamp(24px, 2.5vw, 30px);
+            border-radius: 28px;
+          }
+          .ach-logo-tile {
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
+          }
+          .ach-card-bottom {
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 18px;
+          }
+          .ach-copy {
+            max-width: 64%;
+          }
+          .ach-metric {
+            align-self: auto;
+          }
+          .ach-end-card {
+            min-height: clamp(260px, 36vh, 310px);
+          }
         }
         .ach-end-text {
           font-family: var(--font-serif);
