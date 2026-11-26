@@ -190,7 +190,7 @@ export function Work() {
         }
         .work-panel.is-open {
           box-shadow:
-            inset 0 0 0 1px rgba(13, 13, 13, 0.08),
+            inset 0 0 0 1px var(--maroon-line),
             0 28px 64px -26px rgba(13, 13, 13, 0.14);
         }
 
@@ -242,8 +242,9 @@ export function Work() {
           transform: rotate(45deg);
         }
         .work-panel.is-open .work-plus {
-          background: var(--ink);
+          background: var(--maroon);
           color: var(--card);
+          box-shadow: inset 0 0 0 1px var(--maroon);
         }
 
         /* Desktop collapsed spine */
@@ -314,7 +315,7 @@ export function Work() {
           width: 4px;
           height: 4px;
           border-radius: 999px;
-          background: var(--ink);
+          background: var(--maroon);
           flex-shrink: 0;
           transform: translateY(-2px);
         }

@@ -42,7 +42,7 @@ export function Certifications() {
           content: "";
           position: absolute;
           inset: 0;
-          background: var(--ink);
+          background: var(--maroon-dark);
           transform: scaleX(0);
           transform-origin: 0% 50%;
           transition: transform 0.56s var(--ease);

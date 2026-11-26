@@ -222,7 +222,13 @@ export function Hero() {
         }
         .hero-sound-btn:hover {
           transform: scale(1.07);
-          background: #222222;
+          background: var(--maroon);
+        }
+        .hero-sound-btn[aria-pressed="true"] {
+          background: var(--maroon);
+        }
+        .hero-sound-btn[aria-pressed="true"]:hover {
+          background: var(--maroon-dark);
         }
         .hero-sound-btn:active {
           transform: scale(0.96);
@@ -231,7 +237,7 @@ export function Hero() {
           position: absolute;
           inset: -6px;
           border-radius: 999px;
-          border: 1.5px solid rgba(13, 13, 13, 0.32);
+          border: 1.5px solid var(--maroon-line);
           pointer-events: none;
           animation: heroSoundPing 2.2s var(--ease) infinite;
         }

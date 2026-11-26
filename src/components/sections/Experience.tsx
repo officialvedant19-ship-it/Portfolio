@@ -68,7 +68,7 @@ export function Experience() {
         .timeline-spine {
           width: 100%;
           height: 100%;
-          background: var(--ink);
+          background: var(--maroon);
           transform-origin: 50% 0%;
           will-change: transform;
         }
@@ -112,9 +112,9 @@ export function Experience() {
             box-shadow 0.45s var(--ease);
         }
         .timeline-stop.is-lit .timeline-dot {
-          background: var(--ink);
-          border-color: var(--ink);
-          box-shadow: 0 0 0 6px rgba(13, 13, 13, 0.08);
+          background: var(--maroon);
+          border-color: var(--maroon);
+          box-shadow: 0 0 0 6px var(--maroon-soft);
         }
         .stop-meta {
           display: flex;
@@ -189,16 +189,16 @@ export function Experience() {
         }
         .timeline-next.is-lit {
           opacity: 1;
-          border-color: rgba(13, 13, 13, 0.45);
+          border-color: var(--maroon-line);
         }
         .timeline-next .timeline-dot {
           top: 34px;
           border-style: dashed;
         }
         .timeline-next.is-lit .timeline-dot {
-          background: var(--ink);
+          background: var(--maroon);
           border-style: solid;
-          border-color: var(--ink);
+          border-color: var(--maroon);
         }
         .next-title {
           margin: 0;

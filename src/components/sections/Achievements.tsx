@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ACHIEVEMENTS, type AchievementItem } from "@/lib/data";
 import { prefersReducedMotion, useScrollProgress } from "@/lib/hooks";
-import { TechLogo, getBrandTint, isBrand } from "@/components/ui/TechLogo";
+import { TechLogo } from "@/components/ui/TechLogo";
 
 function CountUpMetric({
   item,
@@ -222,7 +222,7 @@ export function Achievements() {
         .ach-progress-fill {
           width: 100%;
           height: 100%;
-          background: var(--ink);
+          background: var(--maroon);
           transform-origin: 0% 50%;
           will-change: transform;
         }
@@ -264,7 +264,7 @@ export function Achievements() {
         .ach-card.is-center {
           transform: translateY(-12px);
           box-shadow:
-            inset 0 0 0 1px rgba(13, 13, 13, 0.06),
+            inset 0 0 0 1px var(--maroon-line),
             0 36px 74px -26px rgba(13, 13, 13, 0.16),
             0 12px 26px -14px rgba(13, 13, 13, 0.08);
         }
@@ -452,9 +452,9 @@ export function Achievements() {
           >
             {ACHIEVEMENTS.map((item, idx) => {
               const isCenter = centerIndex === idx;
-              const tint = isBrand(item.logoKey)
-                ? getBrandTint(item.logoKey)
-                : "rgba(13, 13, 13, 0.07)";
+              const tint = isCenter
+                ? "rgba(110, 29, 42, 0.14)"
+                : "rgba(13, 13, 13, 0.06)";
 
               return (
                 <article

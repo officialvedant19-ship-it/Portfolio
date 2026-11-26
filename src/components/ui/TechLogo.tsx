@@ -172,7 +172,7 @@ export function isBrand(key: string): boolean {
 }
 
 export function getBrandTint(key: string): string {
-  return BRAND[key]?.tint ?? "rgba(13, 13, 13, 0.06)";
+  return isBrand(key) ? "rgba(110, 29, 42, 0.1)" : "rgba(13, 13, 13, 0.06)";
 }
 
 interface TechLogoProps {

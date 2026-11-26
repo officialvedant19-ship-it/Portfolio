@@ -81,38 +81,131 @@ export function Contact() {
           width: 0.24em;
         }
 
-        /* Circular spinning "say hello" badge */
-        .hello-badge {
+        /* Interactive Contact Portal CTA */
+        .contact-portal {
           position: relative;
-          width: 112px;
-          height: 112px;
+          width: 124px;
+          height: 124px;
           border-radius: 999px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
-          color: var(--ink);
+          color: var(--card);
+          isolation: isolate;
           transition: transform 0.45s var(--ease);
         }
-        .hello-badge:hover {
-          transform: scale(1.06);
+        .contact-portal:hover,
+        .contact-portal:focus-visible {
+          transform: translateY(-2px);
         }
-        .hello-ring {
+        .portal-dial {
+          position: absolute;
+          inset: 0;
           width: 100%;
           height: 100%;
-          animation: badgeSpin 18s linear infinite;
+          pointer-events: none;
+          animation: portalOrbit 16s linear infinite;
+          transition: transform 0.55s var(--ease);
         }
-        .hello-arrow {
-          position: absolute;
-          font-size: 20px;
-          line-height: 1;
+        .contact-portal:hover .portal-dial,
+        .contact-portal:focus-visible .portal-dial {
+          animation-duration: 7s;
         }
-        @keyframes badgeSpin {
+        @keyframes portalOrbit {
           from {
             transform: rotate(0deg);
           }
           to {
             transform: rotate(360deg);
+          }
+        }
+        .portal-core {
+          position: relative;
+          width: 96px;
+          height: 96px;
+          border-radius: 999px;
+          background: var(--ink);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.18),
+            0 16px 32px -14px rgba(13, 13, 13, 0.36);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          transition:
+            transform 0.45s var(--ease),
+            box-shadow 0.45s var(--ease);
+        }
+        .portal-core::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 999px;
+          background: var(--maroon);
+          transform: scale(0);
+          transition: transform 0.52s var(--ease);
+          z-index: 0;
+        }
+        .contact-portal:hover .portal-core,
+        .contact-portal:focus-visible .portal-core {
+          transform: scale(1.04);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.24),
+            0 0 0 6px var(--maroon-soft),
+            0 20px 36px -14px rgba(110, 29, 42, 0.45);
+        }
+        .contact-portal:hover .portal-core::before,
+        .contact-portal:focus-visible .portal-core::before {
+          transform: scale(1);
+        }
+        .portal-viewport {
+          position: relative;
+          z-index: 1;
+          width: 78px;
+          height: 44px;
+          overflow: hidden;
+        }
+        .portal-stack {
+          display: flex;
+          flex-direction: column;
+          transition: transform 0.48s var(--ease);
+        }
+        .contact-portal:hover .portal-stack,
+        .contact-portal:focus-visible .portal-stack {
+          transform: translateY(-44px);
+        }
+        .portal-face {
+          height: 44px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 4px;
+          flex-shrink: 0;
+        }
+        .portal-label {
+          font-family: var(--font-mono);
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: var(--paper);
+          line-height: 1;
+        }
+        .portal-arrow {
+          font-size: 18px;
+          line-height: 1;
+          color: var(--card);
+        }
+        @media (min-width: 780px) {
+          .contact-portal {
+            width: 136px;
+            height: 136px;
+          }
+          .portal-core {
+            width: 104px;
+            height: 104px;
           }
         }
 
@@ -140,7 +233,8 @@ export function Contact() {
           transition: text-decoration-color 0.35s var(--ease);
         }
         .email-link:hover {
-          text-decoration-color: var(--ink);
+          color: var(--maroon);
+          text-decoration-color: var(--maroon);
         }
         .copy-chip {
           height: 40px;
@@ -157,12 +251,12 @@ export function Contact() {
             transform 0.3s var(--ease);
         }
         .copy-chip:hover {
-          background: var(--ink);
+          background: var(--maroon);
           color: var(--card);
           transform: translateY(-1px);
         }
         .copy-chip.is-copied {
-          background: var(--ink);
+          background: var(--maroon);
           color: var(--card);
         }
 
@@ -187,7 +281,7 @@ export function Contact() {
         .channel-card:hover {
           transform: translateY(-3px);
           box-shadow:
-            inset 0 0 0 1px rgba(13, 13, 13, 0.14),
+            inset 0 0 0 1px var(--maroon-line),
             0 18px 40px -24px rgba(13, 13, 13, 0.18);
         }
         .channel-k {
@@ -214,7 +308,7 @@ export function Contact() {
         }
         .channel-card:hover .channel-arrow {
           transform: translate(3px, -3px);
-          color: var(--ink);
+          color: var(--maroon);
         }
 
         /* Footer */
@@ -266,29 +360,53 @@ export function Contact() {
 
           <a
             href={`mailto:${PROFILE.email}`}
-            className="hello-badge"
+            className="contact-portal"
             aria-label={`Say hello to ${PROFILE.name} via email`}
           >
-            <svg viewBox="0 0 120 120" className="hello-ring" aria-hidden="true">
-              <defs>
-                <path
-                  id="sayHelloCircle"
-                  d="M 60, 60 m -44, 0 a 44,44 0 1,1 88,0 a 44,44 0 1,1 -88,0"
-                />
-              </defs>
-              <text
-                fill="currentColor"
-                fontSize="9.4"
-                fontFamily="var(--font-mono)"
-                letterSpacing="2.35"
-              >
-                <textPath href="#sayHelloCircle">
-                  SAY HELLO · SAY HELLO · SAY HELLO ·
-                </textPath>
-              </text>
+            <svg viewBox="0 0 136 136" className="portal-dial" fill="none" aria-hidden="true">
+              <circle
+                cx="68"
+                cy="68"
+                r="63"
+                stroke="rgba(13, 13, 13, 0.14)"
+                strokeWidth="1"
+                strokeDasharray="3 5"
+              />
+              <path
+                d="M 68 5 A 63 63 0 0 1 131 68"
+                stroke="var(--maroon)"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <circle cx="68" cy="5" r="2.6" fill="var(--maroon)" />
+              <circle cx="68" cy="131" r="2" fill="rgba(13, 13, 13, 0.32)" />
             </svg>
-            <span className="hello-arrow" aria-hidden="true">
-              ↗
+
+            <span className="portal-core">
+              <span className="portal-viewport">
+                <span className="portal-stack">
+                  <span className="portal-face" aria-hidden="true">
+                    <svg
+                      width="19"
+                      height="19"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <rect x="3" y="5" width="18" height="14" rx="2.5" />
+                      <path d="m4 7 8 6 8-6" />
+                    </svg>
+                    <span className="portal-label">Say hello</span>
+                  </span>
+                  <span className="portal-face" aria-hidden="true">
+                    <span className="portal-arrow">↗</span>
+                    <span className="portal-label">Email me</span>
+                  </span>
+                </span>
+              </span>
             </span>
           </a>
         </div>

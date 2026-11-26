@@ -115,7 +115,7 @@ export function Navigation() {
         .nav-progress-bar {
           width: 100%;
           height: 100%;
-          background: var(--ink);
+          background: var(--maroon);
           transform-origin: 0 50%;
           will-change: transform;
         }
@@ -168,6 +168,11 @@ export function Navigation() {
         .brand-btn:hover .brand-mark,
         .brand-btn:focus-visible .brand-mark {
           transform: rotate(360deg);
+          border-color: var(--maroon);
+        }
+        .brand-btn:hover .brand-mark.is-solid,
+        .brand-btn:focus-visible .brand-mark.is-solid {
+          background: var(--maroon);
         }
         .brand-name {
           font-size: 14px;
@@ -208,7 +213,7 @@ export function Navigation() {
           top: 5px;
           bottom: 5px;
           border-radius: 999px;
-          background: var(--ink);
+          background: var(--maroon);
           transition:
             left 0.48s var(--ease),
             width 0.48s var(--ease),
@@ -252,7 +257,7 @@ export function Navigation() {
           transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
         }
         .nav-mobile-toggle[aria-expanded="true"] {
-          background: var(--ink);
+          background: var(--maroon);
           color: var(--paper);
           box-shadow: none;
         }
@@ -302,7 +307,7 @@ export function Navigation() {
         .mobile-link-num {
           font-family: var(--font-mono);
           font-size: 12px;
-          color: var(--mute);
+          color: var(--maroon);
         }
         .mobile-link-label {
           font-size: clamp(2rem, 9vw, 3rem);

@@ -252,46 +252,121 @@ export function About() {
           backface-visibility: hidden;
           -webkit-backface-visibility: hidden;
           border-radius: 24px;
-          background: var(--card);
+          background:
+            repeating-linear-gradient(
+              0deg,
+              rgba(255, 255, 255, 0.22) 0px,
+              rgba(255, 255, 255, 0.22) 1px,
+              rgba(13, 13, 13, 0.032) 1px,
+              rgba(13, 13, 13, 0.032) 2px
+            ),
+            linear-gradient(
+              132deg,
+              #efeeeb 0%,
+              #d5d4d0 24%,
+              #f4f3f0 44%,
+              #c8c7c2 66%,
+              #e6e5e1 85%,
+              #d3d2ce 100%
+            );
           box-shadow:
-            inset 0 0 0 1px var(--line),
-            0 24px 52px -24px rgba(13, 13, 13, 0.18),
-            0 8px 20px -12px rgba(13, 13, 13, 0.08);
+            inset 0 1.5px 0 rgba(255, 255, 255, 0.92),
+            inset 0 -1.5px 0 rgba(13, 13, 13, 0.28),
+            inset 1.5px 0 0 rgba(255, 255, 255, 0.55),
+            inset -1.5px 0 0 rgba(13, 13, 13, 0.16),
+            0 0 0 1px rgba(13, 13, 13, 0.24),
+            0 28px 56px -22px rgba(13, 13, 13, 0.3),
+            0 10px 22px -12px rgba(13, 13, 13, 0.16);
           overflow: hidden;
           display: flex;
           flex-direction: column;
         }
+        .id-face::before {
+          content: "";
+          position: absolute;
+          inset: -20%;
+          background: linear-gradient(
+            115deg,
+            transparent 30%,
+            rgba(255, 255, 255, 0.42) 48%,
+            rgba(255, 255, 255, 0.08) 56%,
+            transparent 70%
+          );
+          transform: translateX(-18%) rotate(-6deg);
+          transition: transform 0.85s var(--ease);
+          pointer-events: none;
+          z-index: 2;
+        }
+        .id-scene:hover .id-face::before {
+          transform: translateX(18%) rotate(-6deg);
+        }
         .id-back {
           transform: rotateY(180deg);
-          padding: 24px 22px 20px;
+          padding: 19px 20px 16px;
           justify-content: space-between;
         }
+        .id-back::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: linear-gradient(90deg, var(--maroon-dark), var(--maroon), var(--maroon-dark));
+          z-index: 3;
+        }
         .id-top-band {
-          background: var(--ink);
+          position: relative;
+          background:
+            repeating-linear-gradient(
+              0deg,
+              rgba(255, 255, 255, 0.04) 0px,
+              rgba(255, 255, 255, 0.04) 1px,
+              transparent 1px,
+              transparent 2px
+            ),
+            linear-gradient(180deg, #252525 0%, #0f0f0f 55%, #1c1c1c 100%);
           color: var(--paper);
-          padding: 16px 18px 12px;
+          padding: 15px 18px 13px;
           display: flex;
           flex-direction: column;
           align-items: center;
           gap: 8px;
+          border-bottom: 2.5px solid var(--maroon);
+          box-shadow: 0 1px 0 rgba(255, 255, 255, 0.52);
+          z-index: 1;
         }
         .id-slot {
           width: 44px;
           height: 7px;
           border-radius: 999px;
           background: var(--paper);
-          opacity: 0.92;
+          box-shadow: inset 0 1.5px 2px rgba(13, 13, 13, 0.45);
+          opacity: 0.94;
         }
         .id-top-label {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
           font-family: var(--font-mono);
           font-size: 10px;
           letter-spacing: 0.2em;
           text-transform: uppercase;
-          color: rgba(244, 242, 238, 0.9);
+          color: rgba(244, 242, 238, 0.92);
+        }
+        .id-top-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 999px;
+          background: var(--maroon-light);
+          box-shadow: 0 0 0 2px rgba(141, 44, 59, 0.35);
+          flex-shrink: 0;
         }
         .id-front-body {
+          position: relative;
+          z-index: 1;
           flex: 1;
-          padding: 16px 20px 16px;
+          padding: 15px 20px 15px;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -299,17 +374,21 @@ export function About() {
         }
         .id-photo-halo {
           position: relative;
-          padding: 3px;
+          padding: 3.5px;
           border-radius: 18px;
-          background: linear-gradient(145deg, #d7d4ce 0%, #8c8982 50%, #eae7e1 100%);
-          box-shadow: 0 12px 26px -12px rgba(13, 13, 13, 0.22);
+          background: linear-gradient(145deg, #ffffff 0%, #7d7c78 34%, #e9e8e4 68%, #5e5d5a 100%);
+          box-shadow:
+            inset 0 1px 1px rgba(255, 255, 255, 0.85),
+            0 10px 22px -10px rgba(13, 13, 13, 0.34),
+            0 0 0 1px rgba(13, 13, 13, 0.14);
         }
         .id-photo-frame {
           width: 128px;
           height: 156px;
-          border-radius: 15px;
+          border-radius: 14.5px;
           overflow: hidden;
           background: #ffffff;
+          box-shadow: inset 0 0 0 1px rgba(13, 13, 13, 0.12);
         }
         .id-photo-img {
           width: 100%;
@@ -323,7 +402,7 @@ export function About() {
         }
         .id-identity {
           text-align: center;
-          margin-top: 8px;
+          margin-top: 6px;
         }
         .id-name {
           margin: 0;
@@ -332,14 +411,16 @@ export function About() {
           letter-spacing: -0.03em;
           color: var(--ink);
           line-height: 1.15;
+          text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
         }
         .id-role {
           margin: 3px 0 0;
           font-family: var(--font-mono);
-          font-size: 10px;
-          letter-spacing: 0.06em;
+          font-size: 9.8px;
+          letter-spacing: 0.07em;
           text-transform: uppercase;
-          color: var(--mute-text);
+          color: var(--maroon);
+          font-weight: 600;
         }
         .id-meta-grid {
           width: 100%;
@@ -347,8 +428,11 @@ export function About() {
           grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 6px;
           padding-block: 8px;
-          border-top: 1px solid var(--line);
-          border-bottom: 1px solid var(--line);
+          border-top: 1px solid rgba(13, 13, 13, 0.18);
+          border-bottom: 1px solid rgba(13, 13, 13, 0.18);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.62),
+            0 1px 0 rgba(255, 255, 255, 0.62);
           text-align: left;
         }
         .id-meta-key {
@@ -357,13 +441,13 @@ export function About() {
           font-size: 8.5px;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          color: var(--mute-text);
+          color: #42403d;
         }
         .id-meta-val {
           display: block;
           font-family: var(--font-mono);
           font-size: 10.5px;
-          font-weight: 600;
+          font-weight: 700;
           color: var(--ink);
           margin-top: 2px;
         }
@@ -375,18 +459,21 @@ export function About() {
           gap: 10px;
         }
         .id-holo {
-          width: 30px;
-          height: 30px;
+          width: 32px;
+          height: 32px;
           border-radius: 999px;
-          background: conic-gradient(from 40deg, #dcdcdc, #f9f9f9, #b8b8b8, #efefef, #c7c7c7, #dcdcdc);
-          box-shadow: inset 0 0 0 1px rgba(13, 13, 13, 0.14);
+          background: conic-gradient(from 35deg, #c6c5c1, #fafafa, #9f9e9a, #f1f0ed, #b5b4b0, #fafafa, #c6c5c1);
+          box-shadow:
+            inset 0 0 0 1.5px var(--maroon),
+            inset 0 0 0 3px rgba(255, 255, 255, 0.62),
+            0 2px 5px rgba(13, 13, 13, 0.22);
           display: flex;
           align-items: center;
           justify-content: center;
           font-family: var(--font-mono);
           font-size: 8px;
           font-weight: 700;
-          color: var(--ink-2);
+          color: var(--ink);
           flex-shrink: 0;
         }
         .id-hint {
@@ -395,55 +482,79 @@ export function About() {
           font-size: 10.5px;
           letter-spacing: 0.06em;
           text-transform: uppercase;
-          color: var(--faint);
+          color: var(--mute-text);
         }
 
         /* Back face */
         .id-back-kicker {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
           font-family: var(--font-mono);
-          font-size: 10px;
+          font-size: 9.5px;
+          font-weight: 600;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: var(--mute-text);
-          padding-bottom: 10px;
-          border-bottom: 1px solid var(--line);
+          color: var(--maroon);
+          padding-bottom: 8px;
+          border-bottom: 1px solid rgba(13, 13, 13, 0.18);
+          box-shadow: 0 1px 0 rgba(255, 255, 255, 0.62);
+        }
+        .id-back-kicker::after {
+          content: "VM-2027";
+          font-size: 9px;
+          letter-spacing: 0.1em;
+          color: #42403d;
         }
         .id-back-list {
+          position: relative;
+          z-index: 1;
           list-style: none;
-          margin: 14px 0 auto;
+          margin: 10px 0 auto;
           padding: 0;
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          gap: 7px;
         }
         .id-back-item {
-          font-size: 12.5px;
-          line-height: 1.45;
-          color: var(--ink-2);
+          font-size: 11.8px;
+          line-height: 1.38;
+          color: #1f1e1d;
+          font-weight: 500;
         }
         .id-back-item strong {
           display: block;
           font-family: var(--font-mono);
-          font-size: 9.5px;
+          font-size: 9px;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          color: var(--mute-text);
-          font-weight: 500;
-          margin-bottom: 2px;
+          color: #45433f;
+          font-weight: 600;
+          margin-bottom: 1px;
         }
         .id-signature {
+          position: relative;
+          z-index: 1;
           font-family: var(--font-serif);
           font-style: italic;
-          font-size: 24px;
+          font-size: 21px;
+          line-height: 1.1;
           color: var(--ink);
-          padding-top: 10px;
-          border-top: 1px solid var(--line);
+          padding-top: 8px;
+          border-top: 1px solid rgba(13, 13, 13, 0.18);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
+          text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
         }
         .id-found {
-          margin-top: 6px;
+          position: relative;
+          z-index: 1;
+          margin-top: 4px;
           font-family: var(--font-mono);
-          font-size: 9.5px;
-          color: var(--mute-text);
+          font-size: 9px;
+          line-height: 1.35;
+          color: #3a3835;
           word-break: break-word;
         }
 
@@ -494,7 +605,8 @@ export function About() {
           transition: text-decoration-color 0.25s var(--ease);
         }
         .fact-link:hover {
-          text-decoration-color: var(--ink);
+          color: var(--maroon);
+          text-decoration-color: var(--maroon);
         }
         .about-quote {
           margin: 0;
@@ -599,7 +711,10 @@ export function About() {
                   <div className="id-face id-front">
                     <div className="id-top-band">
                       <span className="id-slot" aria-hidden="true" />
-                      <span className="id-top-label">DEVELOPER ID</span>
+                      <span className="id-top-label">
+                        <span className="id-top-dot" aria-hidden="true" />
+                        DEVELOPER ID
+                      </span>
                     </div>
 
                     <div className="id-front-body">
